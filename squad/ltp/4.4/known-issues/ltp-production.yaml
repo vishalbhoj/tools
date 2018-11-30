@@ -1,0 +1,530 @@
+globals:
+  - environments: &environments_arm64
+    - hi6220-hikey
+    - juno-r2
+    - dragonboard-410c
+    - qemu_arm64
+  - environments: &environments_arm32
+    - x15
+    - qemu_arm
+  - environments: &environments_x86_64
+    - x86
+    - qemu_x86_64
+  - environments: &environments_i386
+    - i386
+    - qemu_i386
+  - environments: &environments_qemu
+    - qemu_arm
+    - qemu_arm64
+    - qemu_i386
+    - qemu_x86_64
+  - environments: &environments_32bit
+    - i386
+    - qemu_i386
+    - qemu_arm
+    - x15
+  - environments: &environments_qemu_arm
+    - qemu_arm
+    - qemu_arm64
+  - environments: &environments_intel
+    - i386
+    - qemu_i386
+    - qemu_x86_64
+    - x86
+  - environments: &environments_arm64_arm32
+    - dragonboard-410c
+    - hi6220-hikey
+    - juno-r2
+    - qemu_arm64
+    - qemu_arm
+    - x15
+
+projects:
+- name: LKFT-ltp
+  projects: &projects_all
+    - lkft/linux-next-oe
+    - lkft/linux-mainline-oe
+    - lkft/linux-stable-rc-4.19-oe
+    - lkft/linux-stable-rc-4.18-oe
+    - lkft/linux-stable-rc-4.14-oe
+    - lkft/linux-stable-rc-4.9-oe
+    - lkft/linux-stable-rc-4.4-oe
+    - lkft/linaro-hikey-stable-rc-4.4-oe
+  url: https://qa-reports.linaro.org
+  environments: &environments_all
+  - dragonboard-410c
+  - hi6220-hikey
+  - i386
+  - juno-r2
+  - qemu_x86_64
+  - qemu_i386
+  - qemu_arm
+  - qemu_arm64
+  - x15
+  - x86
+  known_issues:
+  - environments:
+    - hi6220-hikey
+    notes: >
+      Linux-4.4: LTP: bind02: socket() failed: errno=EACCES(13): Permission
+      denied
+    projects:
+      - lkft/linaro-hikey-stable-rc-4.4-oe
+    test_name: ltp-syscalls-tests/bind02
+    url: https://bugs.linaro.org/show_bug.cgi?id=2962
+    active: true
+    intermittent: false
+  - environments: *environments_all
+    notes: >
+      New test case bind03 failed
+      LTP: 4.4: bind03.c:55: FAIL: expected EINVAL: EADDRINUSE
+    projects:
+      - lkft/linux-stable-rc-4.4-oe
+      - lkft/linaro-hikey-stable-rc-4.4-oe
+    test_name: ltp-syscalls-tests/bind03
+    url: https://bugs.linaro.org/show_bug.cgi?id=4042
+    active: true
+    intermittent: false
+  - environments: *environments_all
+    notes: >
+      New test case mlock203 failed
+      LTP: 4.4: mlock203.c:63: FAIL: Locking one memory again increased VmLck
+    projects:
+      - lkft/linux-stable-rc-4.4-oe
+      - lkft/linaro-hikey-stable-rc-4.4-oe
+    test_name: ltp-syscalls-tests/mlock203
+    url: https://bugs.linaro.org/show_bug.cgi?id=4043
+    active: true
+    intermittent: false
+  - environments:
+    - hi6220-hikey
+    - x15
+    - qemu_arm
+    - qemu_arm64
+    - qemu_i386
+    - qemu_x86_64
+    notes: >
+      LKFT: LTP: pselect01_64: slept for too long
+    projects: *projects_all
+    test_name: ltp-syscalls-tests/pselect01
+    url: https://bugs.linaro.org/show_bug.cgi?id=3089
+    active: true
+    intermittent: false
+  - environments:
+    - hi6220-hikey
+    - x15
+    - qemu_arm
+    - qemu_arm64
+    - qemu_i386
+    - qemu_x86_64
+    notes: >
+      LKFT: LTP: pselect01_64: slept for too long
+    projects: *projects_all
+    test_name: ltp-syscalls-tests/pselect01_64
+    url: https://bugs.linaro.org/show_bug.cgi?id=3089
+    active: true
+    intermittent: false
+  - environments: *environments_arm64_arm32
+    notes: >
+      mainline kernel tests baselining
+    projects: *projects_all
+    test_name: ltp-syscalls-tests/quotactl01
+    url: https://projects.linaro.org/projects/CTT/queues/issue/CTT-585
+    active: true
+    intermittent: false
+  - environments: *environments_arm64
+    notes: >
+      sysfs01 sysfs02 sysfs03 sysfs04 sysfs05 and sysfs06 no more valid.
+      sysfs system call is obsolete; don't use it.
+      This test can only run on kernels that support the sysfs system call
+    projects: *projects_all
+    test_name: ltp-syscalls-tests/sysfs01
+    url: https://bugs.linaro.org/show_bug.cgi?id=3722
+    active: true
+    intermittent: false
+  - environments: *environments_arm64
+    notes: >
+      sysfs01 sysfs02 sysfs03 sysfs04 sysfs05 and sysfs06 no more valid.
+      sysfs system call is obsolete; don't use it.
+      This test can only run on kernels that support the sysfs system call
+    projects: *projects_all
+    test_name: ltp-syscalls-tests/sysfs02
+    url: https://bugs.linaro.org/show_bug.cgi?id=3722
+    active: true
+    intermittent: false
+  - environments: *environments_arm64
+    notes: >
+      sysfs01 sysfs02 sysfs03 sysfs04 sysfs05 and sysfs06 no more valid.
+      sysfs system call is obsolete; don't use it.
+      This test can only run on kernels that support the sysfs system call
+    projects: *projects_all
+    test_name: ltp-syscalls-tests/sysfs03
+    url: https://bugs.linaro.org/show_bug.cgi?id=3722
+    active: true
+    intermittent: false
+  - environments: *environments_arm64
+    notes: >
+      sysfs01 sysfs02 sysfs03 sysfs04 sysfs05 and sysfs06 no more valid.
+      sysfs system call is obsolete; don't use it.
+      This test can only run on kernels that support the sysfs system call
+    projects: *projects_all
+    test_name: ltp-syscalls-tests/sysfs04
+    url: https://bugs.linaro.org/show_bug.cgi?id=3722
+    active: true
+    intermittent: false
+  - environments: *environments_arm64
+    notes: >
+      sysfs01 sysfs02 sysfs03 sysfs04 sysfs05 and sysfs06 no more valid.
+      sysfs system call is obsolete; don't use it.
+      This test can only run on kernels that support the sysfs system call
+    projects: *projects_all
+    test_name: ltp-syscalls-tests/sysfs05
+    url: https://bugs.linaro.org/show_bug.cgi?id=3722
+    active: true
+    intermittent: false
+  - environments: *environments_arm64
+    notes: >
+      sysfs01 sysfs02 sysfs03 sysfs04 sysfs05 and sysfs06 no more valid.
+      sysfs system call is obsolete; don't use it.
+      This test can only run on kernels that support the sysfs system call
+    projects: *projects_all
+    test_name: ltp-syscalls-tests/sysfs06
+    url: https://bugs.linaro.org/show_bug.cgi?id=3722
+    active: true
+    intermittent: false
+  - environments: *environments_arm64
+    notes: >
+      ustat01 and ustat02 failed only on Juno, because this syscall not
+      implemented on arm-64 architecture.
+      ustat(2) failed and setthe errno to 38 : Function not implemented
+    projects: *projects_all
+    test_name: ltp-syscalls-tests/ustat01
+    url: https://bugs.linaro.org/show_bug.cgi?id=3721
+    active: true
+    intermittent: false
+  - environments: *environments_arm64
+    notes: >
+      ustat01 and ustat02 failed only on Juno, because this syscall not
+      implemented on arm-64 architecture.
+      ustat(2) failed and setthe errno to 38 : Function not implemented
+    projects: *projects_all
+    test_name: ltp-syscalls-tests/ustat02
+    url: https://bugs.linaro.org/show_bug.cgi?id=3721
+    active: true
+    intermittent: false
+  - environments: *environments_all
+    notes: >
+      LKFT: LTP: inotify07 FAIL: didn't get event: mask=40000004
+      inotify07 is not supported on 4.4 and 4.9
+    projects:
+    - lkft/linux-stable-rc-4.9-oe
+    - lkft/linux-stable-rc-4.4-oe
+    - lkft/linaro-hikey-stable-rc-4.4-oe
+    test_name: ltp-syscalls-tests/inotify07
+    url: https://bugs.linaro.org/show_bug.cgi?id=3931
+    active: true
+    intermittent: false
+  - environments: *environments_all
+    notes: >
+      LKFT: LTP: inotify08 FAIL: didn't get event: mask=4
+      inotify08 is not supported on 4.14, 4.9 and 4.4
+    projects:
+    - lkft/linux-stable-rc-4.14-oe
+    - lkft/linux-stable-rc-4.9-oe
+    - lkft/linux-stable-rc-4.4-oe
+    - lkft/linaro-hikey-stable-rc-4.4-oe
+    test_name: ltp-syscalls-tests/inotify08
+    url: https://bugs.linaro.org/show_bug.cgi?id=3881
+    active: true
+    intermittent: false
+  - environments: *environments_all
+    notes: >
+      fs:isofs Do not try to build iso's on embedded boards
+    projects: *projects_all
+    test_name: ltp-fs-tests/isofs
+    url: https://bugs.linaro.org/show_bug.cgi?id=3318
+    active: true
+    intermittent: false
+  - environments: *environments_arm64
+    notes: >
+      LKFT: arm64: Hikey: Juno: db410c:
+      ltp-fs-tests/quota_remount_test01
+      quotaon: Quota format not supported in kernel
+    projects: *projects_all
+    test_name: ltp-fs-tests/quota_remount_test01
+    url: https://bugs.linaro.org/show_bug.cgi?id=3354
+    active: true
+    intermittent: false
+  - environments: *environments_all
+    notes: >
+      LKFT: linux-mainline: HiKey and Juno: ltp-containers Network Namespaces
+      tests failed
+    projects: *projects_all
+    test_name: ltp-containers-tests/netns_sysfs
+    url: https://bugs.linaro.org/show_bug.cgi?id=3327
+    active: true
+    intermittent: false
+  - environments: *environments_32bit
+    notes: >
+      Test is inconsistent on x15
+      Intermittent failures on qemu_arm and i386
+    projects: *projects_all
+    test_name: ltp-syscalls-tests/fcntl36
+    url: https://bugs.linaro.org/show_bug.cgi?id=3339
+    active: true
+    intermittent: true
+  - environments: *environments_arm32
+    notes: >
+      LKFT: netns_netlink fails on x15 in mainline and 4.15
+    projects: *projects_all
+    test_name: ltp-containers-tests/netns_netlink
+    url: https://bugs.linaro.org/show_bug.cgi?id=3484
+    active: true
+    intermittent: false
+  - environments: *environments_qemu
+    notes: >
+      LKFT: qemu: LTP skip failed timing test cases
+    projects: *projects_all
+    test_name: ltp-syscalls-tests/clock_nanosleep02
+    url: https://bugs.linaro.org/show_bug.cgi?id=3768
+    active: true
+    intermittent: false
+  - environments: *environments_qemu
+    notes: >
+      LKFT: qemu: LTP skip failed timing test cases
+    projects: *projects_all
+    test_name: ltp-syscalls-tests/epoll_wait02
+    url: https://bugs.linaro.org/show_bug.cgi?id=3768
+    active: true
+    intermittent: false
+  - environments: *environments_qemu
+    notes: >
+      LKFT: qemu: LTP skip failed timing test cases
+    projects: *projects_all
+    test_name: ltp-syscalls-tests/futex_wait05
+    url: https://bugs.linaro.org/show_bug.cgi?id=3768
+    active: true
+    intermittent: false
+  - environments: *environments_qemu
+    notes: >
+      LKFT: qemu: LTP skip failed timing test cases
+    projects: *projects_all
+    test_name: ltp-syscalls-tests/nanosleep01
+    url: https://bugs.linaro.org/show_bug.cgi?id=3768
+    active: true
+    intermittent: false
+  - environments: *environments_qemu
+    notes: >
+      LKFT: qemu: LTP skip failed timing test cases
+    projects: *projects_all
+    test_name: ltp-syscalls-tests/poll02
+    url: https://bugs.linaro.org/show_bug.cgi?id=3768
+    active: true
+    intermittent: false
+  - environments: *environments_qemu_arm
+    notes: >
+      LKFT: LTP skip hackbench01/02 on qemu_arm and qemu_arm64 causing kernel
+    projects: *projects_all
+    test_name: ltp-sched-tests/hackbench01
+    url: https://bugs.linaro.org/show_bug.cgi?id=3777
+    active: true
+    intermittent: false
+  - environments: *environments_qemu_arm
+    notes: >
+      LKFT: LTP skip hackbench01/02 on qemu_arm and qemu_arm64 causing kernel
+    projects: *projects_all
+    test_name: ltp-sched-tests/hackbench02
+    url: https://bugs.linaro.org/show_bug.cgi?id=3777
+    active: true
+    intermittent: false
+  - environments: *environments_all
+    notes: >
+      LTP CVE cve-2014-0196 newly running test case have different results on
+      different boards.
+    projects: *projects_all
+    test_name: ltp-cve-tests/cve-2014-0196
+    url: https://bugs.linaro.org/show_bug.cgi?id=3858
+    active: true
+    intermittent: false
+  - environments: *environments_qemu_arm
+    notes: >
+      LKFT: qemu_arm32/64: LTP cve-2016-7117 Test timeouted, sending SIGKILL!
+    projects: *projects_all
+    test_name: ltp-cve-tests/cve-2016-7117
+    url: https://bugs.linaro.org/show_bug.cgi?id=3884
+    active: true
+    intermittent: false
+  - environments: *environments_qemu_arm
+    notes: >
+      LKFT: qemu_arm: LTP CVE cve-2015-7550 Test timeouted, sending SIGKILL!
+    projects: *projects_all
+    test_name: ltp-cve-tests/cve-2015-7550
+    url: https://bugs.linaro.org/show_bug.cgi?id=3883
+    active: true
+    intermittent: false
+  - environments: *environments_qemu_arm
+    notes: >
+      LKFT: qemu_arm: LTP CVE cve-2015-7550 Test timeouted, sending SIGKILL!
+    projects: *projects_all
+    test_name: ltp-syscalls-tests/keyctl02
+    url: https://bugs.linaro.org/show_bug.cgi?id=3883
+    active: true
+    intermittent: false
+  - environments: *environments_qemu
+    notes: >
+      qemu_arm32/64: LTP select04 is not returning 0 on timeout
+    projects: *projects_all
+    test_name: ltp-syscalls-tests/select04
+    url: https://bugs.linaro.org/show_bug.cgi?id=3852
+    active: true
+    intermittent: false
+  - environments: *environments_intel
+    notes: >
+      LKFT: LTP: cve-2015-3290 failed intermittently on qemu_x86_64
+    projects: *projects_all
+    test_name: ltp-cve-tests/cve-2015-3290
+    url: https://bugs.linaro.org/show_bug.cgi?id=3910
+    active: true
+    intermittent: true
+  - environments: *environments_all
+    notes: >
+      LKFT: LTP creat08 and open10 failed
+      testdir.B.3132/setgid: Incorrect modes, setgid bit should be set
+      skip these tests until this bug fixes on upstream LTP
+    projects: *projects_all
+    test_name: ltp-syscalls-tests/open10
+    url: https://bugs.linaro.org/show_bug.cgi?id=3940
+    active: true
+    intermittent: false
+  - environments: *environments_all
+    notes: >
+      LKFT: LTP creat08 and open10 failed
+      testdir.B.3132/setgid: Incorrect modes, setgid bit should be set
+      skip these tests until this bug fixes on upstream LTP
+    projects: *projects_all
+    test_name: ltp-syscalls-tests/creat08
+    url: https://bugs.linaro.org/show_bug.cgi?id=3940
+    active: true
+    intermittent: false
+  - environments:
+    - i386
+    - qemu_x86_64
+    - qemu_arm64
+    - qemu_arm
+    - qemu_i386
+    notes: >
+      LKFT: next: LTP open11 failed - Got:
+      TEST_ERRNO=EACCES(13): Permission denied instead of errno 0
+    projects: *projects_all
+    test_name: ltp-syscalls-tests/open11
+    url: https://bugs.linaro.org/show_bug.cgi?id=3948
+    active: true
+    intermittent: false
+  - environments: *environments_all
+    notes: >
+      LKFT: LTP open posix: pthread_rwlock_unlock_3-1.run-test failed - reader
+      did not get the lock when writer1 release the lock
+    projects: *projects_all
+    test_name: ltp-open-posix-tests/pthread_rwlock_unlock_3-1
+    url: https://bugs.linaro.org/show_bug.cgi?id=3951
+    active: true
+    intermittent: false
+  - environments: *environments_all
+    notes: >
+      LKFT: LTP open posix: pthread_rwlock_rdlock_2-1 and
+      pthread_rwlock_rdlock_2-2 failed
+    projects: *projects_all
+    test_name: ltp-open-posix-tests/pthread_rwlock_rdlock_2-1
+    url: https://bugs.linaro.org/show_bug.cgi?id=3952
+    active: true
+    intermittent: false
+  - environments: *environments_all
+    notes: >
+      LKFT: LTP open posix: pthread_rwlock_rdlock_2-2 and
+      pthread_rwlock_rdlock_2-2 failed
+    projects: *projects_all
+    test_name: ltp-open-posix-tests/pthread_rwlock_rdlock_2-2
+    url: https://bugs.linaro.org/show_bug.cgi?id=3952
+    active: true
+    intermittent: false
+  - environments: *environments_all
+    notes: >
+      LKFT: LTP: open posix mmap_11-4 : Modification of the partial page at the
+      end of an object is written out
+    projects: *projects_all
+    test_name: ltp-open-posix-tests/mmap_11-4
+    url: https://bugs.linaro.org/show_bug.cgi?id=3953
+    active: true
+    intermittent: false
+  - environments: *environments_all
+    notes: >
+      LKFT: LTP: open posix: clock_settime_8-1 intermittent failures on all
+      device
+    projects: *projects_all
+    test_name: ltp-open-posix-tests/clock_settime_8-1
+    url: https://bugs.linaro.org/show_bug.cgi?id=3965
+    active: true
+    intermittent: true
+  - environments:
+    - hi6220-hikey
+    notes: >
+      LKFT: hikey: LTP: FS: read_all: kernel BUG: sleeping function called
+      from invalid context percpu-rwsem.h:34 - regmap_mmio_read32le+0x24/0x38
+    projects: *projects_all
+    test_name: ltp-fs-tests/read_all_sys
+    url: https://bugs.linaro.org/show_bug.cgi?id=3903
+    active: true
+    intermittent: true
+  - environments:
+    - qemu_arm
+    - qemu_arm64
+    notes: >
+      LKFT: LTP: cve-2017-2671 times out for mainline in qemu_arm and
+      qemu_arm64. consider known issue until qemu in arm has accel.
+    projects: *projects_all
+    test_name: ltp-cve-tests/cve-2017-2671
+    url: https://bugs.linaro.org/show_bug.cgi?id=4024
+    active: true
+    intermittent: true
+  - environments: *environments_all
+    notes: >
+      LTP: fsetxattr02 and fgetxattr02 failed with error ENXIO
+      (No such device or address)
+    projects: *projects_all
+    test_name: ltp-syscalls-tests/fsetxattr02
+    url: https://bugs.linaro.org/show_bug.cgi?id=4011
+    active: true
+    intermittent: false
+  - environments: *environments_all
+    notes: >
+      LTP: fsetxattr02 and fgetxattr02 failed with error ENXIO
+      (No such device or address)
+    projects: *projects_all
+    test_name: ltp-syscalls-tests/fgetxattr02
+    url: https://bugs.linaro.org/show_bug.cgi?id=4011
+    active: true
+    intermittent: false
+  - environments: *environments_all
+    notes: >
+      LTP: statx04 STATX_ATTR_COMPRESSED flag is not set for ext2
+    projects: *projects_all
+    test_name: ltp-syscalls-tests/statx04
+    url: https://bugs.linaro.org/show_bug.cgi?id=4012
+    active: true
+    intermittent: false
+  - environments: *environments_all
+    notes: >
+      LTP: execveat03.c:74: FAIL: execveat() returned unexpected errno: EINVAL
+    projects: *projects_all
+    test_name: ltp-syscalls-tests/execveat03
+    url: https://bugs.linaro.org/show_bug.cgi?id=4010
+    active: true
+    intermittent: false
+  - environments: *environments_all
+    notes: >
+      keyctl05: use data that passes dns_resolver_preparse() check
+    projects: *projects_all
+    test_name: ltp-syscalls-tests/keyctl05
+    url: http://lists.linux.it/pipermail/ltp/2018-October/009752.html
+    active: true
+    intermittent: false

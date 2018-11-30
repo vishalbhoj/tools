@@ -1,0 +1,44 @@
+[
+    {
+        "id": 103840771,
+        "name": "ltp-syscalls-tests/fsetxattr02",
+        "short_name": "fsetxattr02",
+        "status": "xfail",
+        "result": false,
+        "log": null,
+        "has_known_issues": true,
+        "suite": 1747,
+        "metadata": 184053,
+        "known_issues": [
+            240
+        ]
+    },
+    {
+        "id": 103840872,
+        "name": "ltp-syscalls-tests/fgetxattr02",
+        "short_name": "fgetxattr02",
+        "status": "xfail",
+        "result": false,
+        "log": null,
+        "has_known_issues": true,
+        "suite": 1747,
+        "metadata": 184057,
+        "known_issues": [
+            241
+        ]
+    },
+    {
+        "id": 103841637,
+        "name": "ltp-syscalls-tests/statx04",
+        "short_name": "statx04",
+        "status": "xfail",
+        "result": false,
+        "log": "statx04.c:45: PASS: sys_statx(AT_FDCWD, mntpoint/test_dir1, 0, 0, &buf)\rstatx04.c:53: FAIL: STATX_ATTR_COMPRESSED flag is not set\rstatx04.c:58: FAIL: STATX_ATTR_APPEND flag is not set\rstatx04.c:63: FAIL: STATX_ATTR_IMMUTABLE flag is not set\rstatx04.c:68: FAIL: STATX_ATTR_NODUMP flag is not set\rstatx04.c:79: PASS: sys_statx(AT_FDCWD, mntpoint/test_dir2, 0, 0, &buf)\rstatx04.c:86: PASS: STATX_ATTR_COMPRESSED flag is not set\rstatx04.c:91: PASS: STATX_ATTR_APPEND flag is not set\rstatx04.c:96: PASS: STATX_ATTR_IMMUTABLE flag is not set\rstatx04.c:101: PASS: STATX_ATTR_NODUMP flag is not set\rstatx04.c:45: PASS: sys_statx(AT_FDCWD, mntpoint/test_dir1, 0, 0, &buf)\rstatx04.c:51: PASS: STATX_ATTR_COMPRESSED flag is set\rstatx04.c:56: PASS: STATX_ATTR_APPEND flag is set\rstatx04.c:61: PASS: STATX_ATTR_IMMUTABLE flag is set\rstatx04.c:66: PASS: STATX_ATTR_NODUMP flag is set\rstatx04.c:79: PASS: sys_statx(AT_FDCWD, mntpoint/test_dir2, 0, 0, &buf)\rstatx04.c:86: PASS: STATX_ATTR_COMPRESSED flag is not set\rstatx04.c:91: PASS: STATX_ATTR_APPEND flag is not set\rstatx04.c:96: PASS: STATX_ATTR_IMMUTABLE flag is not set\rstatx04.c:101: PASS: STATX_ATTR_NODUMP flag is not set\rstatx04.c:45: PASS: sys_statx(AT_FDCWD, mntpoint/test_dir1, 0, 0, &buf)\rstatx04.c:51: PASS: STATX_ATTR_COMPRESSED flag is set\rstatx04.c:56: PASS: STATX_ATTR_APPEND flag is set\rstatx04.c:61: PASS: STATX_ATTR_IMMUTABLE flag is set\rstatx04.c:66: PASS: STATX_ATTR_NODUMP flag is set\rstatx04.c:79: PASS: sys_statx(AT_FDCWD, mntpoint/test_dir2, 0, 0, &buf)\rstatx04.c:86: PASS: STATX_ATTR_COMPRESSED flag is not set\rstatx04.c:91: PASS: STATX_ATTR_APPEND flag is not set\rstatx04.c:96: PASS: STATX_ATTR_IMMUTABLE flag is not set\rstatx04.c:101: PASS: STATX_ATTR_NODUMP flag is not set",
+        "has_known_issues": true,
+        "suite": 1747,
+        "metadata": 184065,
+        "known_issues": [
+            242
+        ]
+    }
+]

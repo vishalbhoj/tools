@@ -1,0 +1,42 @@
+[
+    {
+        "id": 106613280,
+        "name": "ltp-syscalls-tests/fsetxattr02",
+        "short_name": "fsetxattr02",
+        "status": "xfail",
+        "result": false,
+        "log": null,
+        "has_known_issues": true,
+        "suite": 141,
+        "metadata": 184053,
+        "known_issues": [
+            240
+        ]
+    },
+    {
+        "id": 106613694,
+        "name": "ltp-syscalls-tests/fgetxattr02",
+        "short_name": "fgetxattr02",
+        "status": "xfail",
+        "result": false,
+        "log": null,
+        "has_known_issues": true,
+        "suite": 141,
+        "metadata": 184057,
+        "known_issues": [
+            241
+        ]
+    },
+    {
+        "id": 106613833,
+        "name": "ltp-syscalls-tests/bind03",
+        "short_name": "bind03",
+        "status": "fail",
+        "result": false,
+        "log": "bind03.c:55: FAIL: expected EINVAL: EADDRINUSE",
+        "has_known_issues": false,
+        "suite": 141,
+        "metadata": 184073,
+        "known_issues": []
+    }
+]
