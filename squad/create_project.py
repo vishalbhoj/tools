@@ -35,7 +35,11 @@ def get_list(item, args):
     headers = {"Authorization": "Token {}".format(auth_token)}
 
     r = requests.get(url, headers=headers)
-    logging.debug("{} get request status code: {}".format(item, r.status_code))
+    logging.info("{} get request status code: {}".format(item, r.status_code))
+    if r.status_code != 200:
+        logging.error("Error fetching {}".format(url))
+        print(r.text)
+        sys.exit(1)
     data = r.json()
     items = data["results"]
     while data["next"] is not None:
