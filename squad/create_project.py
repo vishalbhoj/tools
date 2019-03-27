@@ -35,13 +35,12 @@ def parse_args():
     return parser.parse_args()
 
 
-def get_list(item, args):
+def get_list(item, args, token):
     """
     Get the list of give items. e.g. projects, groups.
     """
     url = "{}/api/{}/".format(args.url, item)
-    auth_token = os.environ.get("SQUAD_AUTH_TOKEN")
-    headers = {"Authorization": "Token {}".format(auth_token)}
+    headers = {"Authorization": token}
 
     request = requests.get(url, headers=headers)
     logging.info("%s get request status code: %s", item, request.status_code)
@@ -59,13 +58,12 @@ def get_list(item, args):
     return items
 
 
-def creat_project(data, args):
+def creat_project(data, args, token):
     """
     Create project.
     """
     url = "{}/api/projects/".format(args.url)
-    auth_token = os.environ.get("SQUAD_AUTH_TOKEN")
-    headers = {"Authorization": "Token {}".format(auth_token)}
+    headers = {"Authorization": token}
 
     request = requests.post(url, headers=headers, data=data)
     logging.info("Projects post request status code: %s", request.status_code)
@@ -99,6 +97,7 @@ def main():
         logger.info("1) Find you token here %s/_/settings/api-token/", args.url)
         logger.info("2) export SQUAD_AUTH_TOKEN='Your token'")
         sys.exit(1)
+    token = "Token {}".format(auth_token)
 
     netrc_path = os.path.expanduser('~/.netrc')
     if os.path.exists(netrc_path):
@@ -108,7 +107,7 @@ def main():
             """)
 
     # Check if specified group exist.
-    groups = get_list("groups", args)
+    groups = get_list("groups", args, token)
     logger.debug("Existing group list:\n%s", json.dumps(groups, indent=4))
     groups_slug = [g["slug"] for g in groups]
     if args.group in groups_slug:
@@ -123,7 +122,7 @@ def main():
         sys.exit(1)
 
     # Check if specified project exist.
-    projects = get_list("projects", args)
+    projects = get_list("projects", args, token)
     logger.debug("Existing project list:\n%s", json.dumps(projects, indent=4))
     # projects_slug = [p["slug"] for p in projects]
     # print(projects_slug)
@@ -153,7 +152,7 @@ def main():
         "custom_email_template": "https://staging-qa-reports.linaro.org/api/emailtemplates/1/"
     }
     logger.info("Data to POST: \n%s", json.dumps(data, indent=4))
-    creat_project(data, args)
+    creat_project(data, args, token)
 
 
 if __name__ == "__main__":
