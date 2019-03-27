@@ -1,0 +1,39 @@
+- job:
+    name: create-squad-project
+    project-type: freestyle
+    defaults: global
+    logrotate:
+        daysToKeep: 30
+        numToKeep: 30
+    properties:
+        - authorization:
+            anonymous:
+                - job-read
+                - job-extended-read
+                - job-build
+                - job-read
+                - job-extended-read
+                - job-configure
+                - job-cancel
+    disabled: false
+    node: master
+    display-name: 'create-squad-project'
+    parameters:
+        - string:
+            name: SQUAD_PROJECT
+            default: 'lkft-general-purpose-service'
+    wrappers:
+        - timestamps
+        - credentials-binding:
+            - text:
+                # Needs to be personal squad token.
+                # e.g. https://staging-qa-reports.linaro.org/_/settings/api-token/
+                credential-id: SQUAD_TOKEN_CHASEQI
+                variable: SQUAD_AUTH_TOKEN
+    builders:
+        - shell: |
+            #!/bin/bash -ex
+            
+            wget https://raw.githubusercontent.com/chase-qi/tools/master/squad/create_project.py
+            python --version
+            python ./create_project.py -p "${SQUAD_PROJECT}"
