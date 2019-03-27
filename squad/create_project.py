@@ -1,14 +1,20 @@
 #!/usr/bin/env python
+"""
+Create squad project on given instance if the project doesn't exist already.
+"""
 
 import argparse
 import json
-import os
-import requests
-import sys
 import logging
+import os
+import sys
+import requests
 
 
 def parse_args():
+    """
+    Parse script arguments.
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument("-u", "--url", dest="url",
                         default="https://staging-qa-reports.linaro.org",
@@ -30,17 +36,20 @@ def parse_args():
 
 
 def get_list(item, args):
+    """
+    Get the list of give items. e.g. projects, groups.
+    """
     url = "{}/api/{}/".format(args.url, item)
     auth_token = os.environ.get("SQUAD_AUTH_TOKEN")
     headers = {"Authorization": "Token {}".format(auth_token)}
 
-    r = requests.get(url, headers=headers)
-    logging.info("{} get request status code: {}".format(item, r.status_code))
-    if r.status_code != 200:
-        logging.error("Error fetching {}".format(url))
-        print(r.text)
+    request = requests.get(url, headers=headers)
+    logging.info("%s get request status code: %s", item, request.status_code)
+    if request.status_code != 200:
+        logging.error("Error fetching %s", url)
+        print(request.text)
         sys.exit(1)
-    data = r.json()
+    data = request.json()
     items = data["results"]
     while data["next"] is not None:
         url = data["next"]
@@ -51,17 +60,32 @@ def get_list(item, args):
 
 
 def creat_project(data, args):
+    """
+    Create project.
+    """
     url = "{}/api/projects/".format(args.url)
     auth_token = os.environ.get("SQUAD_AUTH_TOKEN")
     headers = {"Authorization": "Token {}".format(auth_token)}
 
-    r = requests.post(url, headers=headers, data=data)
-    logging.info("Projects post request status code: {}".format(r.status_code))
-    # r.raise_for_status()
-    logging.info("Project created:\n{}".format(json.dumps(r.json(), indent=4)))
+    request = requests.post(url, headers=headers, data=data)
+    logging.info("Projects post request status code: %s", request.status_code)
+    if request.status_code != 201:
+        logging.error("Error posting %s", url)
+        # FIXME: As squad doesn't return new created privated projects, exit normally if
+        # the returned msg matches: The fields group, slug must make a unique set.
+        print(request.text)
+        if "The fields group, slug must make a unique set." in request.json().get("non_field_errors"):
+            logging.warning("Project already exist!")
+            return
+        sys.exit(1)
+    logging.info("Project created:\n%s", json.dumps(request.json(), indent=4))
 
 
 def main():
+    """
+    Check if specified groups and project exist. Create the given project when it doesn't
+    exist already.
+    """
     args = parse_args()
     logging.basicConfig(format="%(asctime)s: %(funcName)s: %(levelname)s: %(message)s")
     logger = logging.getLogger()
@@ -72,7 +96,7 @@ def main():
     auth_token = os.environ.get("SQUAD_AUTH_TOKEN")
     if auth_token is None:
         logger.error("SQUAD_AUTH_TOKEN not provided in environment")
-        logger.info("1) Find you token here {}/_/settings/api-token/".format(args.url))
+        logger.info("1) Find you token here %s/_/settings/api-token/", args.url)
         logger.info("2) export SQUAD_AUTH_TOKEN='Your token'")
         sys.exit(1)
 
@@ -85,29 +109,29 @@ def main():
 
     # Check if specified group exist.
     groups = get_list("groups", args)
-    logger.debug("Existing group list:\n{}".format(json.dumps(groups, indent=4)))
+    logger.debug("Existing group list:\n%s", json.dumps(groups, indent=4))
     groups_slug = [g["slug"] for g in groups]
     if args.group in groups_slug:
         # Get group uri by group slug.
         groups_url = {}
-        for g in groups:
-            groups_url[g["slug"]] = g["url"]
+        for group in groups:
+            groups_url[group["slug"]] = group["url"]
         group_url = groups_url[args.group]
     else:
-        logger.error("Group {} not found!".format(args.group))
-        logger.info("Existing groups:\n{}".format(groups_slug))
+        logger.error("Group %s not found!", args.group)
+        logger.info("Existing groups:\n%s", groups_slug)
         sys.exit(1)
 
     # Check if specified project exist.
     projects = get_list("projects", args)
-    logger.debug("Existing project list:\n{}".format(json.dumps(projects, indent=4)))
+    logger.debug("Existing project list:\n%s", json.dumps(projects, indent=4))
     # projects_slug = [p["slug"] for p in projects]
     # print(projects_slug)
     projects_full_name = [p["full_name"] for p in projects]
     new_project_full_name = "{}/{}".format(args.group, args.project)
     if new_project_full_name in projects_full_name:
-        logger.warning("Project {} already exists, exiting...".format(args.project))
-        logger.info("Existing project slug list:\n{}".format(projects_full_name))
+        logger.warning("Project %s already exists, exiting...", args.project)
+        logger.info("Existing project slug list:\n%s", projects_full_name)
         sys.exit(0)
 
     data = {
@@ -128,7 +152,7 @@ def main():
         "project_settings": "{}",
         "custom_email_template": "https://staging-qa-reports.linaro.org/api/emailtemplates/1/"
     }
-    logger.info("Data to POST: \n{}".format(json.dumps(data, indent=4)))
+    logger.info("Data to POST: \n%s", json.dumps(data, indent=4))
     creat_project(data, args)
 
 
