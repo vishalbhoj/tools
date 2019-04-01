@@ -52,7 +52,7 @@ def get_list(item, args, token):
     items = data["results"]
     while data["next"] is not None:
         url = data["next"]
-        data = requests.get(url, headers).json()
+        data = requests.get(url, headers=headers).json()
         items.extend(data['results'])
 
     return items
