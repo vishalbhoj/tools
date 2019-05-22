@@ -29,6 +29,8 @@ def parse_args():
     parser.add_argument("-e", "--html-email", dest="html_email", default=False,
                         choices=["True", "False"],
                         help="Set to True to enable HTML version email report.")
+    parser.add_argument("-s", "--subscriber-email", dest="subscriber_email", default="ci_notify@linaro.org",
+                        help="Specify the email address to which the qa_reports email should be sent.")
     parser.add_argument("-l", "--logging", dest="logging", default="INFO",
                         choices=["DEBUG", "INFO"])
 
@@ -56,6 +58,28 @@ def get_list(item, args, token):
         items.extend(data['results'])
 
     return items
+
+def subscribe_project(data, args, token):
+    """
+    subscribe to the created project.
+    """
+    url = "{}/api/projects/".format(args.url)
+    headers = {"Authorization": token, "Content-Type": "application/x-www-form-urlencoded"}
+
+    projects = get_list("projects", args, token)
+    #logger.debug("Existing project list:\n%s", json.dumps(projects, indent=4))
+    for p in projects:
+        new_project_full_name = "{}/{}".format(args.group, args.project)
+        if new_project_full_name == p["full_name"]:
+            project_id=p["id"]
+    subscriber_url = "https://staging-qa-reports.linaro.org/api/projects/{}/subscribe/".format(project_id)
+    subscriber_data = "email={}".format(args.subscriber_email)
+    request = requests.post(subscriber_url, headers=headers, data=subscriber_data)
+
+    if request.status_code != 201:
+        logging.error("Error posting %s", subscriber_url)
+        # Report the failure
+        print(request.text)
 
 
 def creat_project(data, args, token):
@@ -153,6 +177,7 @@ def main():
     }
     logger.info("Data to POST: \n%s", json.dumps(data, indent=4))
     creat_project(data, args, token)
+    subscribe_project(data, args, token)
 
 
 if __name__ == "__main__":
